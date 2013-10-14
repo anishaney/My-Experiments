@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
+//#include <conio.h>
 #include <string.h>
 //#include <stdbool.h>
 
@@ -33,13 +33,13 @@ NODE* reverse(NODE* start);
 
 NODE* sortlist(NODE* start);
 
-void HasLoop(NODE* start);
+int HasLoop(NODE* start, int *no_of_nodes_in_LL);
 
 
 int main(){
 	
 	int index = 0;
-//	bool Loop;
+	int Loop, no_of_nodes_in_LL = RECORDS;
 
 	/*initialize arrays to get the values for the nodes*/
 	char name[10][20] = {"Dog", "Cat", "Mule", "Horse", "Elephant", "Tiger"};
@@ -82,7 +82,7 @@ int main(){
 
 	print_linkedlist(start);
 
-	HasLoop(start);
+	Loop = HasLoop(start, &no_of_nodes_in_LL);
 
 	/*start = insert_at_beg(start, "Deer", "Mixed Breed", 10);
 	
@@ -119,13 +119,24 @@ int main(){
 	/*We should free up the dynamically allocated memory*/
 	point = start;
 
-	do{
-		prior = point->next;
-		free(point);
-		point = prior;
-	}while (prior != NULL);
+	if(Loop != 1){
+	/*Throwing exception because it is trying to free already freed memory*/
+		do{
+			prior = point->next;
+			free(point);
+			point = prior;
+		}while (prior != NULL);
+	}
+	else if (Loop == 1)
+	{
+		for (index = 0; index < no_of_nodes_in_LL; index++){
+			prior = point->next;
+			free(point);
+			point = prior;
+		}
+	}
 
-	getch();
+	getchar();
 	return 0;
 }
 
@@ -219,6 +230,12 @@ NODE* reverse(NODE* start){
 
 void print_linkedlist(NODE* start){
 	int i=0;
+
+	if (start == NULL){
+		printf("No LinkedList present");
+		return;
+	}
+
 	point = start;
 
 	do{
@@ -394,19 +411,19 @@ NODE* sortlist(NODE *root) {
 	}
 }
 
-void HasLoop(NODE* start){
+int HasLoop(NODE* start, int *no_of_nodes_in_LL){
 
-	int status = 0, loop_at = 1, index;
+	int status = 0, loop_at = 1, index, nodes_not_in_loop = 0;
 
 	if (start == NULL)
-		return;
+		return status;
 	else
 	{
 		NODE *hare = start;
 		NODE *tortoise = start;
 
 		NODE* start_loop;
-		int count = 1;
+		int count = 0;
 
 		while(hare != NULL && hare->next != NULL)
 		{
@@ -429,20 +446,29 @@ void HasLoop(NODE* start){
 			}
 
 			hare = tortoise = start;
-			for (index = 0; index < count; index++){
+			for (index = 0; index <= count; index++){
 				hare = hare->next;
 			}
 
 			while (tortoise != hare){
+				nodes_not_in_loop++;
 				loop_at++;
 				hare = hare->next;
 				tortoise = tortoise->next;
 			}
 			printf("The loop in the Linked List starts at node %d\n", loop_at);
 
-			return;
+			(*no_of_nodes_in_LL) = count + nodes_not_in_loop;
+			printf("Number of nodes in the loop are %d\n", *no_of_nodes_in_LL);
+
+			return status;
 		}
-			
+
 		printf("The Linked List does not have loop\n");
+
+		(*no_of_nodes_in_LL) = count + nodes_not_in_loop;
+		printf("Number of nodes in the loop are %d\n", *no_of_nodes_in_LL);
+		
+		return status;
 	}
 }
