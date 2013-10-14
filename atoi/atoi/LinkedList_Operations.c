@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <string.h>
+//#include <stdbool.h>
 
 #define RECORDS 6
 
@@ -12,7 +13,7 @@ struct animal{
 	char breed[25];
 	int age;
 	struct animal *next;
-}*point, *start, *prior;
+}*point, *start, *prior, *loop;
 
 void print_linkedlist(NODE* start);
 
@@ -30,16 +31,21 @@ NODE* delete_at_nth(NODE* start, int nth_node);
 
 NODE* reverse(NODE* start);
 
+NODE* sortlist(NODE* start);
+
+void HasLoop(NODE* start);
+
 
 int main(){
 	
 	int index = 0;
+//	bool Loop;
 
 	/*initialize arrays to get the values for the nodes*/
 	char name[10][20] = {"Dog", "Cat", "Mule", "Horse", "Elephant", "Tiger"};
 	char breed[10][20] = {"Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed"};
 
-	int age[10] = {4, 5, 7, 22, 50, 17};
+	int age[10] = {4, 5, 22, 7, 17, 50};
 
 	/*Dynamically allocating the memory*/
 	start = (NODE *) malloc (sizeof(NODE));
@@ -58,58 +64,57 @@ int main(){
 		strcpy (point->name, name[index]);
 		strcpy (point->breed, breed[index]);
 		point->age = age[index];
+
+		//For checking loops in the Linked_List
+		if (index == 2)
+			loop = point;
+		
 		prior->next = point; /*Point earlier node to the current node*/
-
+		
 		point->next = NULL; /*point this next to NULL*/
-
+		
 		prior = point; /*this is now the prior node*/
+
+		//Making last node point to a intermediate node - making a loop in the LinkedList
+		if (index == RECORDS-1)
+			prior->next = loop;
 	}
 
 	print_linkedlist(start);
 
-	start = insert_at_beg(start, "Deer", "Mixed Breed", 10);
-	
-	printf("\n\n");
+	HasLoop(start);
 
+	/*start = insert_at_beg(start, "Deer", "Mixed Breed", 10);
+	
 	print_linkedlist(start);
 
 	start = insert_at_end(start, "Bear", "Mixed Breed", 14);
 	
-	printf("\n\n");
-
 	print_linkedlist(start);
 
 	start = insert_at_nth(start, 9, "Penguine", "Pure Breed", 30);
 	
-	printf("\n\n");
-
 	print_linkedlist(start);
 	
 	start = delete_first_node(start);
 	
-	printf("\n\n");
-
 	print_linkedlist(start);
 
 	start = delete_last_node(start);
-
-	printf("\n\n");
 
 	print_linkedlist(start);
 
 	start = delete_at_nth(start, 3);
 
-	printf("\n\n");
-
 	print_linkedlist(start);
 
 	start = reverse(start);
 
-	printf("\n\n");
+	print_linkedlist(start);*/
 
-	print_linkedlist(start);
+	//start = sortlist(start);
 
-	//point = start;
+	//print_linkedlist(start);
 
 	/*We should free up the dynamically allocated memory*/
 	point = start;
@@ -213,14 +218,24 @@ NODE* reverse(NODE* start){
 }
 
 void print_linkedlist(NODE* start){
+	int i=0;
 	point = start;
+
 	do{
 		//prior = point->next; /*try putting it below the printf statement*/
+		if (i == 15)
+			return;
 		
 		printf("%s is a %s, and is %d years old.\n", point->name, point->breed, point->age);
 
 		point = point->next;
+
+		i++;
 	}while (point != NULL);
+
+	return;
+
+	//printf("\n\n");
 }
 
 NODE* insert_at_beg(NODE* start, char *name, char *breed, int age){
@@ -310,4 +325,124 @@ NODE* insert_at_nth(NODE* start, int nth_node, char* name, char* breed, int age)
 	}
 
 	return start;
+}
+
+NODE* sortlist(NODE *root) {
+
+	NODE *middle = NULL, *later = NULL, *parent = NULL, *pwalk2 = NULL;
+	if(NULL == root) {
+		return root;
+	}
+	
+	middle = root;
+	while(middle->next) {
+		
+		if(middle->age <= middle->next->age)
+			middle = middle->next;
+		else 
+			break;
+	}
+	
+	if(middle->next) {
+	 	
+	 	
+	 	later = middle->next;
+		
+		/*special case when node goes on top*/
+		if(later->age < root->age) {
+			if(later->next != NULL)
+				middle->next = later->next;
+			else {
+				middle->next = NULL;
+				later->next = middle;
+				return later;
+			}
+			later->next = root;	
+			root = later;
+			
+		}
+		
+		/*goes in somewhere middle*/
+		parent = root;
+		while(middle->next) {
+			pwalk2 = parent->next;
+			while(pwalk2 != middle->next) {
+				
+				
+				later = middle->next;
+				if(later->age <= pwalk2->age) {
+			
+					if(later->next != NULL)
+						middle->next = later->next;
+					else 
+						middle->next = NULL;			
+			
+					parent->next = later;
+					later->next = pwalk2;
+					break;
+				}
+				parent = pwalk2;
+				pwalk2 = pwalk2->next;
+			}
+		
+		}
+		return root;
+	
+	} else {
+	
+		return root;
+	}
+}
+
+void HasLoop(NODE* start){
+
+	int status = 0, loop_at = 1, index;
+
+	if (start == NULL)
+		return;
+	else
+	{
+		NODE *hare = start;
+		NODE *tortoise = start;
+
+		NODE* start_loop;
+		int count = 1;
+
+		while(hare != NULL && hare->next != NULL)
+		{
+			hare = hare->next->next;
+			tortoise = tortoise->next;
+
+			if (hare == tortoise){
+				status = 1;
+				start_loop = hare;
+				printf("The Linked List has loop\n");
+				break;
+			}
+		}
+
+		if (status){
+			tortoise = start_loop->next;
+			while (start_loop != tortoise){
+				tortoise = tortoise->next;
+				count++;
+			}
+
+			hare = tortoise = start;
+			for (index = 0; index < count; index++){
+				hare = hare->next;
+			}
+
+			while (tortoise != hare){
+				loop_at++;
+				hare = hare->next;
+				tortoise = tortoise->next;
+			}
+			printf("The loop in the Linked List starts at node %d\n", loop_at);
+
+			return;
+		}
+			
+		printf("The Linked List does not have loop\n");
+	}
 }
