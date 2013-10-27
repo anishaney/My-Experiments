@@ -1,0 +1,1 @@
+#include #include #include #include using namespace std; int main() { int casen; scanf("%d\n", &casen); while(casen--) { int n,m; scanf("%d %d\n", &n, &m); int * primes = new int[m-n+1]; for(int i=0;i= n) primes[j - n] = 1; } for(int i=0;i

@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int i, n=42, counter = 0;
+int main() {
+  for(i=0; i<n; n--) {
+    counter++;
+    printf("*");
+  }
+  printf("%d", counter);
+  return 0;
+}
+
+//int i, n=42;
+int _main() {
+  for(i=0; i<n; n--) {
+    printf("*");
+  }
+}
+Q
+//int i, n=42;
+int _main() {
+  for(i=0; -i<n; i--) {
+    printf("*");
+  }
+}
