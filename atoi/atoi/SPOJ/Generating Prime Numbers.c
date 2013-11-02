@@ -1,117 +1,116 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <math.h>
+/*segmented sieve*/
+#include<math.h>
+#include<stdio.h>
+#include<stdlib.h>
+#define MAX_LIMIT 1000000000  /*10^9*/
+#define NEW_MAX  31623 /*SQUARE ROOT OF 1000000000*/
+#define MAX_WIDTH 100000   /*10^5*/
+int flags[NEW_MAX+1];  /*TO PREVENT SEGMENTATION FAULT goblal so initialised to 0,true*/    
 
-typedef unsigned long long int LLI;
-
-void printPrimeNos(int t, LLI m[], LLI n[]){
-	int i;
-	LLI k, j, p;
-	int isPrime[100000];
-	int isPrime2[100000];
-
-	for (i = 0; i < t; i++){
-		if (n[i] - m[i] > 100000){
-			printf("Too much difference between inputs.\n");
-			continue;
-		}
-		if (m[i] > n[i]){
-			printf("Inputs are not as expected.\n");
-			continue;
-		}
-		if (m[i] > 1000000000 || n[i] > 1000000000){
-			printf("Too long inputs.\n");
-			continue;
-		}
-
-		if (m[i] == 1 && n[i] != 1)
-			isPrime[m[i]] = true;
-
-		if (m[i] < 31623 && n
-
-		for (k = 2; k <= sqrt(n[i]); k++){
-			if (!isPrime[k]){
-				j = pow(k, 2);
-				p = 1;
-				while(j <= n[i]){
-					isPrime[j] = true;
-					j = pow(k, 2) + p*k;
-					p++;
-				}
-			}
-		}
-
-		for (k = 2; k <= sqrt(n[i]); k++){
-			if (!isPrime[k]){
-				j = pow(k, 2);
-				p = 1;
-				while(j <= n[i]){
-					isPrime[j] = true;
-					j = pow(k, 2) + p*k;
-					p++;
-				}
-			}
-		}
-
-		for (k = m[i]; k <= n[i]; k++){
-			if (!isPrime[k])
-				printf("%lld\n", k);
-		}
-		printf("\n");
-	}
+void initialise(int flagarr[],long int n) 
+/*initialise all elements to true from 1 to n*/
+{
+    long int i;
+    for(i=3;i<=n;i+=2)
+        flagarr[i]=0;
 }
 
+void sieve(unsigned long m,unsigned long n,int seg_flags[])
+{
 
-/*Can increment the value by 2 if m[i] is even. Initialize a variable to m[i] if it is odd or m[i]+1 if it is even. CHECK if m[i] = 1 OR 2*/
+    unsigned long p,i,limit;  
 
-/*	for (i = 0; i <= t; i++){
-		if (n[i] - m[i] > 100000){
-			printf("Too much difference between inputs.\n");
-			continue;
-		}
-		if (m[i] > n[i]){
-			printf("Inputs are not as expected.\n");
-			continue;
-		}
-		if (m[i] > 1000000000 || n[i] > 1000000000){
-			printf("Too long inputs.\n");
-			continue;
-		}
-		for(j = m[i]; j <= n[i]; j++){
-			p = j;
-			isPrime = 1;
+    /*Seperate inner loop for p=2 so that evens are not iterated*/
+    if(m%2==0)
+        i=m;
+    else
+        i=m+1;
+    /*i is now next even > m*/
+    for(;i<=n;i+=2)
+    {
 
-			if (p == 1)
-				continue;
+        seg_flags[i-m+1]=1;
 
-			for (k = 2; k < p; k++){
-				if (!(p % k)){
-					isPrime = 0;
-					break;
-				}
-				else
-					continue;
-			}
-			if (isPrime)
-				printf("%ld\n", p);
-		}
-		printf("\n");
-	}*/
+    }
+    if(seg_flags==flags)
+        limit=NEW_MAX;
+    else
+        limit=sqrt(n);
+    for(p=3;p<=limit+1;p+=2)  /*initial p+=2 bcoz we need not check even*/
+    {
+        if(flags[p]==0)
+        {
 
-int main(){
-	int t, i;
-	LLI m[10], n[10];
-	
-	printf("Enter no. of Test Cases:\n");
 
-	scanf("%d", &t);
+            for(i=p*p; i<=n ;i+=p)  
+            /*start from p square since under it would have been cut*/
+            {
+                if(i<m)
+                    continue;
+                seg_flags[i-m+1]=1; 
+                     /*p*p,  p*p+p,  p*p + 2p   are not primes*/
 
-	for (i = 0; i < t; i++){
-		 scanf("%lld %lld", &m[i], &n[i]);
-	}
+            }
+        }
+    }
+}
 
-	printPrimeNos(t, m, n);
+void print_sieve(unsigned long m,unsigned long n,int flagarr[])
+{
+    unsigned long i;
+    if(m<3)
+    {printf("2\n");m=3;}
+    if(m%2==0)
+        i=m+1;
+    else
+        i=m;
+if(flags==flagarr)    /*print non-segented sieve*/  
+{
+    for(;i<=n;i+=2)
+        if(flagarr[i]==0)
+                printf("%lu\n",i);
+}
+else {
+ //print segmented
 
-	return 0;
+    for(;i<=n;i+=2)
+        if(flagarr[i-m+1]==0)
+                printf("%lu\n",i);
+}}
+
+int main()
+{
+    unsigned long m,n;
+    int t;
+    int seg_flags[MAX_WIDTH+100];
+    /*setting of flags for prime nos. by sieve of erasthromas upto NEW_MAX*/
+    sieve(1,NEW_MAX,flags);
+    /*end of initial sieving*/
+    scanf("%d",&t);
+    while(t--)
+    {
+        scanf("%lu %lu",&m,&n);
+        if(n<=NEW_MAX)
+            print_sieve(m,n,flags); 
+            /*NO SEGMENTED SIEVING NECESSARY*/
+        else if(m>NEW_MAX)
+        {
+            //initialise(seg_flags,n-m+1);  
+            /*segmented sieving necessary*/
+            sieve(m,n,seg_flags);
+            print_sieve(m,n,seg_flags);
+        }
+        else if(m<=NEW_MAX && n>NEW_MAX) 
+         /*PARTIAL SEGMENTED SIEVING NECESSARY*/
+        {
+            print_sieve(m,NEW_MAX,flags);
+            /*now lower bound for seg sieving is new_max+1*/
+            initialise(seg_flags,n-NEW_MAX);
+            sieve(NEW_MAX+1,n,seg_flags);
+            print_sieve(NEW_MAX+1,n,seg_flags);
+        }
+        putchar('\n');
+    }
+    system("pause");
+    return 0;
 }
