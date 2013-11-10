@@ -31,6 +31,8 @@ NODE* delete_at_nth(NODE* start, int nth_node);
 
 NODE* reverse(NODE* start);
 
+NODE* reverseII(NODE* start, int, int);
+
 NODE* sortlist(NODE* start);
 
 int HasLoop(NODE* start, int *no_of_nodes_in_LL);
@@ -38,8 +40,8 @@ int HasLoop(NODE* start, int *no_of_nodes_in_LL);
 
 int main(){
 	
-	int index = 0;
-	int Loop, no_of_nodes_in_LL = RECORDS;
+	int index = 0, m, n;
+	int Loop = 0, no_of_nodes_in_LL = RECORDS;
 
 	/*initialize arrays to get the values for the nodes*/
 	char name[10][20] = {"Dog", "Cat", "Mule", "Horse", "Elephant", "Tiger"};
@@ -76,13 +78,21 @@ int main(){
 		prior = point; /*this is now the prior node*/
 
 		//Making last node point to a intermediate node - making a loop in the LinkedList
-		if (index == RECORDS-1)
-			prior->next = loop;
+		/*if (index == RECORDS-1)
+			prior->next = loop;*/
 	}
 
 	print_linkedlist(start);
 
-	Loop = HasLoop(start, &no_of_nodes_in_LL);
+	//Loop = HasLoop(start, &no_of_nodes_in_LL);
+
+	printf("Enter values of m and n\n");
+
+	scanf("%d %d", &m, &n);
+
+	start = reverseII(start, m, n);
+
+	print_linkedlist(start);
 
 	/*start = insert_at_beg(start, "Deer", "Mixed Breed", 10);
 	
@@ -471,4 +481,54 @@ int HasLoop(NODE* start, int *no_of_nodes_in_LL){
 		
 		return status;
 	}
+}
+
+NODE* reverseII(NODE* root, int m, int n){
+	int i = 1;
+
+	NODE *curr, *next1, *prev, *curr2, *next2, *prev2, *prev3;
+	next1 = curr = root;
+
+	if (root == NULL)
+		return NULL;
+
+	while (i < m){
+		next1 = curr->next;
+		prev = curr;
+		curr = next1;
+		i++;
+	}
+	next1 = curr->next;
+
+	printf("%d %d %d\n", prev->age, curr->age, next1->age);
+
+	next2 = curr2 = curr;
+
+	for (i = 0; i < n-m; i++){
+		next2 = curr2->next;
+		prev2 = curr2;
+		curr2 = next2;
+	}
+
+	next2 = curr2->next;
+
+	printf("%d %d %d\n", prev2->age, curr2->age, next2->age);
+
+	//curr->next = next2; //'m' is not going to point next2
+
+	prev3 = next2;
+
+	while (curr != next2){
+		NODE* temp = curr->next;
+		curr->next = prev3;
+		//start = curr;
+		prev3 = curr;
+		curr = temp;
+	}
+
+	prev->next = curr2; //'n' is now next of prev
+	//curr->next = prev;
+	//start = prev;
+
+	return root;
 }
