@@ -1,3 +1,7 @@
+/*Algorithm: Get two pointers for each strig, haystack and needle. A third pointer is required to store the start position of needle string in the haystack. Check for an instance in haystack where needle's first character is matched, once matched check if all the needle string is present. Once the whole needle is present in haystack, return start pointer.*/
+
+/*Complexity: O(n_haystack)*/
+
 class Solution {
 public:
     char *strStr(char *haystack, char *needle) {
