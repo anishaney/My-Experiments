@@ -46,14 +46,23 @@ void myClass :: uniqueSubstring(){
 
 	for (j = 0; j < strlen(myString); j++){
 		index = (int)myString[j] - (int)'a';
-		//cout << index << endl;
+		cout << index;
 		if (charstr[index] >= i){
 			length = j-i;
+			cout << "\t" << length;
 			if (max_length < length)
 				max_length = length;
 			i = charstr[index]+1;
 		}
 		charstr[index] = j;
+		cout << "\t" << charstr[index] << endl;
+	}
+
+	/*Check for the last character since it may not have appeared for the firt time*/
+	if (charstr[index] >= i){
+		length = j-i;
+		if (max_length < length)
+			max_length = length;
 	}
 
 	/*Display the final maximum length*/
@@ -67,7 +76,7 @@ void myClass :: uniqueSubstring(){
 }
 
 int main(){
-	char str[100] = "mysurnameisaney";
+	char str[100] = "qopubjguxhxdipfzwswybgfylqvjzhar";
 	myClass m1(str);
 
 	m1.displayString();
