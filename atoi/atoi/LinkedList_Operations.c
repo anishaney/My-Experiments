@@ -37,6 +37,7 @@ NODE* sortlist(NODE* start);
 
 int HasLoop(NODE* start, int *no_of_nodes_in_LL);
 
+NODE* insertionSort(NODE *start);
 
 int main(){
 	
@@ -55,7 +56,7 @@ int main(){
 	/*First case is always a special case*/
 	strcpy (start->name, "Sheep");
 	strcpy (start->breed, "Mix Breed");
-	start->age = 6;
+	start->age = 3;
 	start->next = NULL;
 
 	prior = start; /*giving the head to the next pointer*/
@@ -84,13 +85,17 @@ int main(){
 
 	print_linkedlist(start);
 
+	printf("\n");
+
 	//Loop = HasLoop(start, &no_of_nodes_in_LL);
 
-	printf("Enter values of m and n\n");
+	/*printf("Enter values of m and n\n");
 
 	scanf("%d %d", &m, &n);
 
-	start = reverseII(start, m, n);
+	start = reverseII(start, m, n);*/
+
+	start = insertionSort(start);
 
 	print_linkedlist(start);
 
@@ -531,4 +536,44 @@ NODE* reverseII(NODE* root, int m, int n){
 	//start = prev;
 
 	return root;
+}
+
+NODE* insertionSort(NODE *start){
+	NODE *curr, *temp, *head_start, *head_prev;
+	curr = head_start = head_prev = start;
+
+	if (start == NULL){
+		return start;
+	}
+	
+	while (curr->next != NULL){
+		if (curr->age <= curr->next->age){
+			curr = curr->next;
+			continue;
+		}
+		else{
+			temp = curr->next;
+			curr->next = curr->next->next;
+			if (curr == start){
+				start = temp;
+				temp->next = curr;
+			}
+			else{
+				head_start = start;
+				while(head_start->age <= temp->age){
+					head_prev = head_start;
+					head_start = head_start->next;
+				}
+				if (head_start == start){
+					start = temp;
+					temp->next = head_start;
+				}
+				else {
+					head_prev->next = temp;
+					temp->next = head_start;
+				}
+			}
+		}
+	}
+	return start;
 }
