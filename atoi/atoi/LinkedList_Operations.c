@@ -4,7 +4,7 @@
 #include <string.h>
 //#include <stdbool.h>
 
-#define RECORDS 6
+#define RECORDS 9
 
 typedef struct animal NODE;
 
@@ -39,16 +39,20 @@ int HasLoop(NODE* start, int *no_of_nodes_in_LL);
 
 NODE* insertionSort(NODE *start);
 
+NODE *deleteDuplicates(NODE *head);
+
+NODE* remove_nth_node_from_end(NODE *head, int n);
+
 int main(){
 	
 	int index = 0, m, n;
 	int Loop = 0, no_of_nodes_in_LL = RECORDS;
 
 	/*initialize arrays to get the values for the nodes*/
-	char name[10][20] = {"Dog", "Cat", "Mule", "Horse", "Elephant", "Tiger"};
-	char breed[10][20] = {"Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed"};
+	char name[10][20] = {"Dog", "Cat", "Mule", "Horse", "Elephant", "Tiger", "Lion", "Hen", "Peacock"};
+	char breed[10][20] = {"Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed"};
 
-	int age[10] = {4, 5, 22, 7, 17, 50};
+	int age[10] = {4, 4, 4, 5, 6, 6, 7, 50, 50};
 
 	/*Dynamically allocating the memory*/
 	start = (NODE *) malloc (sizeof(NODE));
@@ -95,7 +99,15 @@ int main(){
 
 	start = reverseII(start, m, n);*/
 
-	start = insertionSort(start);
+	//start = insertionSort(start);
+
+	//print_linkedlist(start);
+
+	//printf ("\n");
+
+	//start = deleteDuplicates(start);
+
+	start = remove_nth_node_from_end(start, 10);
 
 	print_linkedlist(start);
 
@@ -576,4 +588,80 @@ NODE* insertionSort(NODE *start){
 		}
 	}
 	return start;
+}
+
+
+NODE *deleteDuplicates(NODE *head) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        if (head == NULL){
+            return head;
+        }
+        NODE *prev, *rem, *curr = head, *link;
+        int count, i;
+        
+        while (curr){
+            count = 1;
+            prev = curr;
+	    if (curr->next != NULL){
+		while (curr->age == curr->next->age){
+			if (curr->next->next != NULL){
+				curr = curr->next;
+				count++;
+			}
+			else
+				break;
+		}
+	    }
+            curr = curr->next;
+            if (count > 1){
+                if (prev == head){
+                    head = curr;
+                }
+                for (i = 0; i < count; i++){
+                    rem = prev;
+                    prev = prev->next;
+                    free(rem);
+                }
+            }
+    	    link->next = curr;
+        }
+        return head;
+}
+
+NODE* remove_nth_node_from_end(NODE *head, int n){
+	if (head == NULL){
+		return head;
+	}
+	
+	NODE* n1, *n2, *prev, *temp;
+	n1 = n2 = prev = head;
+	int i;
+	
+	for (i = 1; i <= n; i++){
+		if(n1 != NULL){
+			n1 = n1->next;
+		}
+		else
+			return head;
+	}
+
+	while (n1){
+		prev = n2;
+		n2 = n2->next;
+		n1 = n1->next;
+	}
+
+	if (n2 == head){
+		temp = n2;
+		head = n2->next;
+		free(n2);
+	}
+	else{
+		temp = n2;
+		prev->next = n2->next;
+		free(temp);
+	}
+
+	return head;
 }
