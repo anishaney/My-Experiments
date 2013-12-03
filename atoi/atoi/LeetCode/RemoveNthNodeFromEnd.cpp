@@ -1,3 +1,10 @@
+/*Algorithm: Put a 'for' loop to reach the nth node from the start. Then using a 'while' loop, check till the nth node (from start) is NULL and increment another node from the start. Once, the nth node (from start) reaches end of the LinkedList, the second node is at position 'n' from the end of the LinkedList.
+*/
+
+/*Complexity: O(n)
+*/
+
+
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -17,7 +24,7 @@ public:
     	n1 = n2 = prev = head;
     	
     	for (int i = 1; i <= n; i++){
-    		if(n1 != NULL){
+    		if(n1 != NULL){ //If n is greater than the no. of nodes in the LinkedList return the head
     			n1 = n1->next;
     		}
     		else
