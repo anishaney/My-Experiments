@@ -52,7 +52,7 @@ int main(){
 	char name[10][20] = {"Dog", "Cat", "Mule", "Horse", "Elephant", "Tiger", "Lion", "Hen", "Peacock"};
 	char breed[10][20] = {"Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed"};
 
-	int age[10] = {4, 4, 4, 5, 6, 6, 7, 50, 50};
+	int age[10] = {4, 4, 5, 5, 7, 9, 9, 50, 50};
 
 	/*Dynamically allocating the memory*/
 	start = (NODE *) malloc (sizeof(NODE));
@@ -99,15 +99,15 @@ int main(){
 
 	start = reverseII(start, m, n);*/
 
-	//start = insertionSort(start);
+	start = insertionSort(start);
 
-	//print_linkedlist(start);
+	print_linkedlist(start);
 
-	//printf ("\n");
+	printf ("\n");
 
-	//start = deleteDuplicates(start);
+	start = deleteDuplicates(start);
 
-	start = remove_nth_node_from_end(start, 10);
+	//start = remove_nth_node_from_end(start, 10);
 
 	print_linkedlist(start);
 
@@ -594,37 +594,60 @@ NODE* insertionSort(NODE *start){
 NODE *deleteDuplicates(NODE *head) {
         // IMPORTANT: Please reset any member data you declared, as
         // the same Solution instance will be reused for each test case.
-        if (head == NULL){
+        if (head == NULL || head->next == NULL){
             return head;
         }
-        NODE *prev, *rem, *curr = head, *link;
-        int count, i;
+        NODE *prev = head, //previous node to the duplicate nodes
+	*rem, //node to be freed
+	*curr = head, //the curr node in the duplicate nodes
+	*curr_next, //next node in duplicate/non-duplicate nodes
+	*first; //starting node of the duplicate node
+
+        int count, i; //count for the no. of duplicate nodes
         
         while (curr){
-            count = 1;
-            prev = curr;
-	    if (curr->next != NULL){
-		while (curr->age == curr->next->age){
-			if (curr->next->next != NULL){
-				curr = curr->next;
-				count++;
-			}
-			else
-				break;
+            count = 1; //initialize it to 1 so that when nodes are not same the count will give us no. of duplicate nodes
+
+	    //point to the next noide
+	    curr_next = curr->next;
+
+	    i = 0;
+	    while (curr->age == curr_next->age){
+		if (!i){
+			i++;
+			first = curr;
+		}
+		count++;
+		curr = curr_next;
+		curr_next = curr->next;
+		if (curr_next == NULL){
+			break;
 		}
 	    }
-            curr = curr->next;
+            curr = curr_next;
             if (count > 1){
-                if (prev == head){
+                if (first == head){
                     head = curr;
                 }
+		else{
+		    prev->next = curr;
+		}
                 for (i = 0; i < count; i++){
-                    rem = prev;
-                    prev = prev->next;
+                    rem = first;
+                    first = first->next;
                     free(rem);
                 }
             }
-    	    link->next = curr;
+
+	    if (curr == NULL){
+		break;
+	    }
+	    if (curr->next == NULL){
+		break;
+	    }
+	    if (curr->age != curr->next->age){
+		prev = curr;
+	    }
         }
         return head;
 }
