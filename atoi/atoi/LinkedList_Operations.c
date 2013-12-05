@@ -95,21 +95,21 @@ int main(){
 
 	/*printf("Enter values of m and n\n");
 
-	scanf("%d %d", &m, &n);
+	scanf("%d %d", &m, &n);*/
 
-	start = reverseII(start, m, n);*/
+	start = reverseII(start, 1, 10);
 
-	start = insertionSort(start);
+	//start = insertionSort(start);
 
 	print_linkedlist(start);
 
 	printf ("\n");
 
-	start = deleteDuplicates(start);
+	//start = deleteDuplicates(start);
 
 	//start = remove_nth_node_from_end(start, 10);
 
-	print_linkedlist(start);
+	//print_linkedlist(start);
 
 	/*start = insert_at_beg(start, "Deer", "Mixed Breed", 10);
 	
@@ -500,52 +500,52 @@ int HasLoop(NODE* start, int *no_of_nodes_in_LL){
 	}
 }
 
+
+//Works for cases without considering corner cases. Need to implement corner cases.
 NODE* reverseII(NODE* root, int m, int n){
 	int i = 1;
 
-	NODE *curr, *next1, *prev, *curr2, *next2, *prev2, *prev3;
-	next1 = curr = root;
+	NODE *m_prev, *n_prev, *m_node, *n_node, *rev_prev, *rev_first, *rev_next, *m_next, *n_next;
+	m_prev = n_prev = m_node = n_node = root;
 
 	if (root == NULL)
 		return NULL;
 
-	while (i < m){
-		next1 = curr->next;
-		prev = curr;
-		curr = next1;
+	for (i = 1; i < n; i++){
+		n_prev = n_node; //No need of this line, but keeping it just in case required for future use.
+		n_node = n_node->next;
+	}
+
+	for (i = 1; i < m; i++){
+		m_prev = m_node; //Required since we need to connect this node to the nth node's next.
+		m_node = m_node->next;
+	}
+
+	m_next = m_node->next; //Required to start the reversing process.
+	n_next = n_node->next; //Required to connect the LinkedList back.
+
+	rev_prev = m_node;
+	rev_first = m_next;
+
+	i = 0;
+
+	while(i < n-m){ //Reversing process starts as we have done it for LinkedList Reversal code (whole LinkedList)
+		rev_next = rev_first->next;
+		rev_first->next = rev_prev;
+		rev_prev = rev_first;
+		rev_first = rev_next;
 		i++;
 	}
-	next1 = curr->next;
 
-	printf("%d %d %d\n", prev->age, curr->age, next1->age);
-
-	next2 = curr2 = curr;
-
-	for (i = 0; i < n-m; i++){
-		next2 = curr2->next;
-		prev2 = curr2;
-		curr2 = next2;
+	//Connecting the nodes appropriately
+	if (m == 1 && n_next != NULL || m == 1 && n_next == NULL){
+		root = n_node;
+		m_node->next = n_next;
 	}
-
-	next2 = curr2->next;
-
-	printf("%d %d %d\n", prev2->age, curr2->age, next2->age);
-
-	//curr->next = next2; //'m' is not going to point next2
-
-	prev3 = next2;
-
-	while (curr != next2){
-		NODE* temp = curr->next;
-		curr->next = prev3;
-		//start = curr;
-		prev3 = curr;
-		curr = temp;
+	else{
+		m_prev->next = n_node;
+		m_node->next = n_next;
 	}
-
-	prev->next = curr2; //'n' is now next of prev
-	//curr->next = prev;
-	//start = prev;
 
 	return root;
 }
