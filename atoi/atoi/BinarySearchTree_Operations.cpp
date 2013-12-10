@@ -1,5 +1,5 @@
 #include <iostream>
-#include <conio.h>
+//#include <conio>
 #include <algorithm>
 
 using namespace std;
@@ -25,6 +25,8 @@ public:
 	void print_inorder();
 	void postorder(tree_node*);
 	void print_postorder();
+	int Max_Depth(tree_node*, int);
+	void Max_Depth_print();
 };
 
 void BinarySearchTree :: insert(int num){
@@ -242,11 +244,30 @@ void BinarySearchTree::postorder(tree_node* p){
 		return;
 }
 
+void BinarySearchTree::Max_Depth_print(){
+	cout << Max_Depth(root, 1);
+}
 
-int _main(){
+int BinarySearchTree::Max_Depth(tree_node* p, int Level){
+	static int depth = 0;
+	if (p == NULL){	
+		return 0;
+	}
+	if (p != NULL){
+		if(Level > depth)
+			depth = Level;
+		Max_Depth(p->left, Level+1);
+		Max_Depth(p->right, Level+1);
+	}
+	return depth;
+} 
+
+
+int main(){
 	BinarySearchTree b;
 
 	int num[10];
+	int Level = 1, depth;
 
 	cout << "Enter number to be inserted" << endl;
 	for (int i=0; i<10; i++){
@@ -268,7 +289,9 @@ int _main(){
 	cout << endl;
 	b.print_preorder();
 
-	getch();
+	cout << endl;
+
+	b.Max_Depth_print();
 
 	return 0;
 }
