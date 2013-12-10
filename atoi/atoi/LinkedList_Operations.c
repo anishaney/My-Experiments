@@ -4,7 +4,7 @@
 #include <string.h>
 //#include <stdbool.h>
 
-#define RECORDS 9
+#define RECORDS 10
 
 typedef struct animal NODE;
 
@@ -43,16 +43,18 @@ NODE *deleteDuplicates(NODE *head);
 
 NODE* remove_nth_node_from_end(NODE *head, int n);
 
+NODE* reordeLinkedList(NODE* head);
+
 int main(){
 	
 	int index = 0, m, n;
 	int Loop = 0, no_of_nodes_in_LL = RECORDS;
 
 	/*initialize arrays to get the values for the nodes*/
-	char name[10][20] = {"Dog", "Cat", "Mule", "Horse", "Elephant", "Tiger", "Lion", "Hen", "Peacock"};
-	char breed[10][20] = {"Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed"};
+	char name[10][20] = {"Dog", "Cat", "Mule", "Horse", "Elephant", "Tiger", "Lion", "Hen", "Peacock", "Tortoise"};
+	char breed[10][20] = {"Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed", "Mixed Breed"};
 
-	int age[10] = {4, 4, 5, 5, 7, 9, 9, 50, 50};
+	int age[10] = {4, 5, 6, 7, 8, 9, 10, 50, 53, 100};
 
 	/*Dynamically allocating the memory*/
 	start = (NODE *) malloc (sizeof(NODE));
@@ -97,9 +99,11 @@ int main(){
 
 	scanf("%d %d", &m, &n);*/
 
-	start = reverseII(start, 1, 10);
+	//start = reverseII(start, 1, 10);
 
 	//start = insertionSort(start);
+
+	start = reordeLinkedList(start);
 
 	print_linkedlist(start);
 
@@ -684,6 +688,50 @@ NODE* remove_nth_node_from_end(NODE *head, int n){
 		temp = n2;
 		prev->next = n2->next;
 		free(temp);
+	}
+
+	return head;
+}
+
+NODE* reordeLinkedList(NODE* head){
+	if (head == NULL || head->next == NULL || head->next->next == NULL)
+		return head;
+
+	NODE* fast, *slow, *first, *slow_prev, *slow_next, *first_next, *fast_prev;
+	int count = 0, full, half, i;
+
+	fast = slow = first = head;
+
+	while(fast != NULL && fast->next != NULL){
+		count++;
+		slow_prev = slow;
+		slow = slow->next;
+		fast_prev = fast;
+		fast = fast->next->next;
+	}
+	
+	if (fast == NULL){
+		full = count*2;
+		half = count;
+	}
+	else if (fast->next == NULL){
+		full = count*2 + 1;
+		half = count+1;
+		slow_prev = slow_prev->next;
+	}
+
+	head = reverseII(head, half+1, full);
+
+	slow = slow_prev->next;
+
+	while(first != slow_prev){
+		first_next = first->next;
+		slow_next = slow->next;
+		first->next = slow;
+		slow_prev->next = slow_next;
+		slow->next = first_next;
+		first = first_next;
+		slow = slow_next;
 	}
 
 	return head;
