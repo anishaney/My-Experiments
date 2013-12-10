@@ -171,6 +171,10 @@ int main(){
 	return 0;
 }
 
+/* LinkedList: L1->L2->L3->L4->L5->NULL
+ * delete_first_node: L2->L3->L4->L5->NULL
+*/
+
 NODE* delete_first_node(NODE *start)
 {
 	NODE *temp;
@@ -185,6 +189,10 @@ NODE* delete_first_node(NODE *start)
 
 	return(start);
 }
+
+/* LinkedList: L1->L2->L3->L4->L5->NULL
+ * delete_last_node: L1->L2->L3->L4->NULL
+*/
 
 NODE* delete_last_node(NODE *start)
 {
@@ -209,6 +217,10 @@ NODE* delete_last_node(NODE *start)
 
 	return(start);
 }
+
+/* LinkedList: L1->L2->L3->L4->L5->NULL
+ * delete_at_nth (2): L1->L3->L4->L5->NULL
+*/
 
 NODE* delete_at_nth(NODE* start, int nth_node){
 	NODE* curr, *curr_next;
@@ -238,6 +250,10 @@ NODE* delete_at_nth(NODE* start, int nth_node){
 
 	return start;
 }
+
+/* LinkedList: L1->L2->L3->L4->L5->NULL
+ * reverse: L5->L4->L3->L2->L1->NULL
+*/
 
 NODE* reverse(NODE* start){
 	NODE* curr, *prev = NULL;
@@ -286,6 +302,10 @@ void print_linkedlist(NODE* start){
 	//printf("\n\n");
 }
 
+/* LinkedList: L1->L2->L3->L4->L5->NULL
+ * insert_at_beg: L0->L1->L2->L3->L4->L5->NULL
+*/
+
 NODE* insert_at_beg(NODE* start, char *name, char *breed, int age){
 	NODE* temp;
 
@@ -310,6 +330,10 @@ NODE* insert_at_beg(NODE* start, char *name, char *breed, int age){
 
 	return start;
 }
+
+/* LinkedList: L1->L2->L3->L4->L5->NULL
+ * insert_at_end: L1->L2->L3->L4->L5->L6->NULL
+*/
 
 NODE* insert_at_end(NODE* start, char* name, char* breed, int age){
 	NODE* temp, *head;
@@ -336,6 +360,10 @@ NODE* insert_at_end(NODE* start, char* name, char* breed, int age){
 
 	return start;
 }
+
+/* LinkedList: L1->L2->L3->L4->L5->NULL
+ * insert_at_nth(2): L1->L0->L2->L3->L4->L5->NULL
+*/
 
 NODE* insert_at_nth(NODE* start, int nth_node, char* name, char* breed, int age){
 	NODE* temp;
@@ -504,8 +532,6 @@ int HasLoop(NODE* start, int *no_of_nodes_in_LL){
 	}
 }
 
-
-//Works for cases without considering corner cases. Need to implement corner cases.
 NODE* reverseII(NODE* root, int m, int n){
 	int i = 1;
 
