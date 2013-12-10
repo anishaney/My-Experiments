@@ -746,11 +746,24 @@ NODE* reordeLinkedList(NODE* head){
 		slow_prev = slow_prev->next;
 	}
 
-	head = reverseII(head, half+1, full);
+	//head = reverseII(head, half+1, full);
 
-	slow = slow_prev->next;
+	NODE *temp = NULL;
 
-	while(first != slow_prev){
+	while(slow != NULL){
+		NODE *node = slow->next;
+		slow->next = temp;
+		temp = slow;
+		slow = node;
+	}
+	NODE *head1;
+	head1 = temp;
+
+	slow_prev->next = NULL;
+
+	//slow = slow_prev->next;
+
+	/*while(first != slow_prev){
 		first_next = first->next;
 		slow_next = slow->next;
 		first->next = slow;
@@ -758,6 +771,15 @@ NODE* reordeLinkedList(NODE* head){
 		slow->next = first_next;
 		first = first_next;
 		slow = slow_next;
+	}*/
+
+	while (first != NULL || head1 != NULL){
+		NODE *first_next = first->next;
+		NODE *slow_next = head1->next;
+		first->next = head1;
+		head1->next = first_next;
+		first = first_next;
+		head1 = slow_next; 
 	}
 
 	return head;
