@@ -8,5 +8,5 @@ int main(){
 	double dft;
 	long double ldft;
 
-	printf("%c, %d, %ld, %f, %lf, %Lf\n", (char)sizeof(ch), sizeof(it), (long int)sizeof(lit), (float)sizeof(ft), (double)sizeof(dft), (long double)sizeof(ldft));
+	printf("%d, %d, %d, %d, %d, %d\n", sizeof(ch), sizeof(it), sizeof(lit), sizeof(ft), sizeof(dft), sizeof(ldft));
 }

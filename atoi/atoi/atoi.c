@@ -1,8 +1,8 @@
-#include <iostream.h>
-#include <conio.h>
+#include <stdio.h>
+//#include <conio.h>
 #include <string.h>
 
-/*int atoi(char *name)
+int atoi(char *name)
 {
 	int ascii=48; // ascii code for zero
 	int len = strlen(name)-1;
@@ -16,18 +16,17 @@
 	}
 	return intVal;
 	
-}*/
+}
 
 int main(){
-	char s[20] = "A";
-	int i;
-	//integer = atoi(s);
+	char s[20] = "Ani";
+	int i, integer1;
+	integer1 = atoi(s);
 
-	int count = 0; 
+	int count[10];
 	for(i=0; i < 10; i++) 
-		count = ++count; 
+		count[i] = i++;
 
-	printf("%d", count);
-	getch();
+	printf("%d %d\n", count[0], integer1);
 	return 0;
 }
