@@ -197,8 +197,6 @@ public:
 
                     return rslt_head;
 
-                result = 
-
                 rslt_next->val = carry;
 
                 rslt_prev->next = rslt_next;
@@ -264,8 +262,6 @@ public:
                 if (rslt_next == NULL)
 
                     return rslt_head;
-
-                result = 
 
                 rslt_next->val = carry;
 
